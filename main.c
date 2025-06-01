@@ -1,3 +1,4 @@
+// ========================= main.c =========================
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -19,43 +20,42 @@ void printTutorial() {
 void playGame(int level) {
     char board[3][3];
     int move;
-    char winner = 0;
+    char winner = ' ';
 
     initBoard(board);
 
-    for (int turn = 0; turn < 9 && !winner; turn++) {
+    for (int turn = 0; turn < 9 && winner == ' '; turn++) {
         displayBoard(board);
         if (turn % 2 == 0) {
-            // Player turn
+            // Giliran pemain
             do {
                 printf("Masukkan posisi (1-9): ");
                 scanf("%d", &move);
-            } while (move < 1 || move > 9 || !isMoveValid(board, move));
+            } while (!isMoveValid(board, move));
             makeMove(board, move, 'X');
         } else {
-            // Bot turn
+            // Giliran bot
             printf("Bot sedang berpikir...\n");
             if (level == 1)
-            move = getEasyMove(board);
+                move = getEasyMove(board);
             else if (level == 2)
-            move = getMediumMove(board, 'O');
+                move = getMediumMove(board, 'O');
             else
-            move = getHardMove(board, 'O');
+                move = getHardMove(board, 'O');
+            makeMove(board, move, 'O');
         }
         winner = checkWinner(board);
     }
 
     displayBoard(board);
-
     if (winner == 'X') printf("Selamat! Kamu menang!\n");
     else if (winner == 'O') printf("Yah! Bot menang!\n");
-    else printf("Hasil seri!\n");
+    else printf("Permainan seri!\n");
 }
 
 int main() {
     int choice;
-
-    srand(time(NULL)); // Untuk bot easy & medium
+    srand(time(NULL));
 
     while (1) {
         printf("=== Tic Tac Toe ===\n");
@@ -79,3 +79,50 @@ int main() {
 
     return 0;
 }
+
+
+
+// #include <stdio.h>
+// #include <stdlib.h>
+// #include "game.h"
+// #include "ai.h"
+
+// void playBotGame(int level) {
+//     char board[3][3];
+//     initBoard(board);
+
+//     char current = 'X';
+//     char winner = ' ';
+//     int move;
+
+//     while (winner == ' ') {
+//         displayBoard(board);
+
+//         if (current == 'X') {
+//             printf("Giliran Kamu (X), masukkan angka 1-9: ");
+//             scanf("%d", &move);
+//             if (!isMoveValid(board, move)) {
+//                 printf("Langkah tidak valid. Coba lagi.\n");
+//                 continue;
+//             }
+//         } else {
+//             printf("Bot (O) sedang berpikir...\n");
+//             if (level == 1)
+//                 move = getEasyMove(board);
+//             else if (level == 2)
+//                 move = getMediumMove(board, 'O');
+//             else
+//                 move = getHardMove(board, 'O');
+//         }
+
+//         makeMove(board, move, current);
+//         winner = checkWinner(board);
+//         current = (current == 'X') ? 'O' : 'X';
+//     }
+
+//     displayBoard(board);
+//     if (winner == 'D')
+//         printf("Permainan seri!\n");
+//     else
+//         printf("Pemenang: %c\n", winner);
+// }
